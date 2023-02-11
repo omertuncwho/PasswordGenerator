@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Safety Password Generator</title>
+</head>
+
+<body>
+    <h1>Safety Password Generator</h1>
+    <input type="text" id="password" readonly>
+    <div class="button-container">
+        <button id="generate-button">Generate Password</button>
+        <button id="copy-button">Copy</button>
+    </div>
+    <div class="alert" id="alert"></div>
+    <footer>© 2023, omertuncwho</footer>
+
+    <script>
+        function generatePassword() {
+            var password = "";
+            var chars =
+                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            var separator = "-";
+            for (var i = 0; i < 3; i++) {
+                for (var j = 0; j < 6; j++) {
+                    var randomIndex = Math.floor(Math.random() * chars.length);
+                    password += chars.charAt(randomIndex);
+                }
+                if (i < 2) {
+                    password += separator;
+                }
+            }
+            return password;
+        }
+
+        document.getElementById("generate-button").addEventListener("click", function () {
+            var passwordInput = document.getElementById("password");
+            passwordInput.value = generatePassword();
+        });
+
+        document.getElementById("copy-button").addEventListener("click", function () {
+            var passwordInput = document.getElementById("password");
+            passwordInput.select();
+            document.execCommand("copy");
+            var alertElement = document.getElementById("alert");
+            alertElement.innerHTML = "Password copied!";
+            setTimeout(function () {
+                alertElement.innerHTML = "";
+            }, 2000);
+        });
+    </script>
+</body>
+
+</html>
