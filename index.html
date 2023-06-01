@@ -2,54 +2,114 @@
 <html>
 
 <head>
-    <title>Safety Password Generator</title>
-    <link rel="stylesheet" href="style.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Safety Password Generator</title>
+	<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <h1>Safety Password Generator</h1>
-    <input type="text" id="password" readonly>
-    <div class="button-container">
-        <button id="generate-button">Generate Password</button>
-        <button id="copy-button">Copy</button>
-    </div>
-    <div class="alert" id="alert"></div>
-    <footer>© 2023, omertuncwho</footer>
+	<h1>Safety Password Generator</h1>
 
-    <script>
-        function generatePassword() {
-            var password = "";
-            var chars =
-                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            var separator = "-";
-            for (var i = 0; i < 3; i++) {
-                for (var j = 0; j < 6; j++) {
-                    var randomIndex = Math.floor(Math.random() * chars.length);
-                    password += chars.charAt(randomIndex);
-                }
-                if (i < 2) {
-                    password += separator;
-                }
-            }
-            return password;
+	<label for="length-slider">Password length:</label>
+	<input type="range" id="length-slider" name="length-slider" min="4" max="32" value="8" onchange="updateTextInput(this.value);"> 	<input type="text" id="textInput">
+	
+
+	<label for="readable-checkbox">Readable:
+		<input type="checkbox" id="readable-checkbox" name="readable-checkbox" checked></label>
+
+	<label for="pronounceable-checkbox">Easy Pronounceable:
+		<input type="checkbox" id="pronounceable-checkbox" name="pronounceable-checkbox"></label>
+
+	<label for="symbol-checkbox">Uppercase:
+		<input type="checkbox" id="uppercase-checkbox" name="uppercase-checkbox" checked></label>
+
+	<label for="uppercase-checkbox">Lowercase:
+		<input type="checkbox" id="lowercase-checkbox" name="lowercase-checkbox" checked></label>
+	<label for="lowercase-checkbox">
+
+
+		<label for="number-checkbox">Numbers:
+			<input type="checkbox" id="number-checkbox" name="number-checkbox" checked></label>
+
+		<label for="symbol-checkbox">Symbols:
+			<input type="checkbox" id="symbol-checkbox" name="symbol-checkbox"></label>
+
+		<br><br>
+
+		<button id="generate-button" onclick="generatePassword()">Generate Password</button>
+
+		<br><br>
+		<input type="text" id="password-output" readonly>
+
+		<button onclick="copyPassword()">Copy</button>
+
+		<script>
+			function generatePassword() {
+				var length = document.getElementById("length-slider").value;
+				var isReadable = document.getElementById("readable-checkbox").checked;
+				var isPronounceable = document.getElementById("pronounceable-checkbox").checked;
+				var useUppercase = document.getElementById("uppercase-checkbox").checked;
+				var useLowercase = document.getElementById("lowercase-checkbox").checked;
+				var useNumbers = document.getElementById("number-checkbox").checked;
+				var useSymbols = document.getElementById("symbol-checkbox").checked;
+
+				var charset = "";
+				if (useUppercase) {
+					charset += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+				}
+				if (useLowercase) {
+					charset += "abcdefghijklmnopqrstuvwxyz";
+				}
+				if (useNumbers) {
+					charset += "0123456789";
+				}
+				if (useSymbols) {
+					charset += "!@#$%^&*()_+-=[]{};:,.<>?";
+				}
+
+				var password = "";
+				for (var i = 0; i < length; i++) {
+					password += charset.charAt(Math.floor(Math.random() * charset.length));
+				}
+
+				if (isReadable) {
+					password = makeReadable(password);
+				}
+				if (isPronounceable) {
+					password = makePronounceable(password);
+				}
+
+				document.getElementById("password-output").value = password;
+			}
+
+
+			function makeReadable(password) {
+
+				return password;
+			}
+
+			function makePronounceable(password) {
+
+				return password;
+			}
+
+			function copyPassword() {
+				var passwordOutput = document.getElementById("password-output");
+				passwordOutput.select
+				passwordOutput.select();
+				document.execCommand("copy");
+				alert("Password Copied");
+			}
+/*TEST AREA START*/
+			function updateTextInput(val) {
+          document.getElementById('textInput').value=val; 
         }
+		/*TEST AREA END*/
 
-        document.getElementById("generate-button").addEventListener("click", function () {
-            var passwordInput = document.getElementById("password");
-            passwordInput.value = generatePassword();
-        });
 
-        document.getElementById("copy-button").addEventListener("click", function () {
-            var passwordInput = document.getElementById("password");
-            passwordInput.select();
-            document.execCommand("copy");
-            var alertElement = document.getElementById("alert");
-            alertElement.innerHTML = "Password copied!";
-            setTimeout(function () {
-                alertElement.innerHTML = "";
-            }, 2000);
-        });
-    </script>
+		</script>
 </body>
+<footer>© 2023, omertuncwho</footer>
 
 </html>
