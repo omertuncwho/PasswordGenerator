@@ -12,7 +12,9 @@
 	<h1>Safety Password Generator</h1>
 
 	<label for="length-slider">Password length:</label>
-	<input type="range" id="length-slider" name="length-slider" min="4" max="32" value="8" onchange="updateTextInput(this.value);"> 	<input type="text" id="textInput">
+	<input type="range" id="length-slider" name="length-slider" min="4" max="32" value="8" 
+	
+	onchange="updateTextInput(this.value);"> 	<input type="text" id="textInput">
 	
 
 	<label for="readable-checkbox">Readable:
@@ -47,6 +49,7 @@
 		<script>
 			function generatePassword() {
 				var length = document.getElementById("length-slider").value;
+				
 				var isReadable = document.getElementById("readable-checkbox").checked;
 				var isPronounceable = document.getElementById("pronounceable-checkbox").checked;
 				var useUppercase = document.getElementById("uppercase-checkbox").checked;
