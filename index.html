@@ -13,146 +13,105 @@
 
 	<label for="length-slider">Password length:</label>
 	<input type="range" id="length-slider" name="length-slider" min="4" max="32" value="8" 
-	onchange="updateTextInput(this.value);">
-	<input type="text" id="textInput">
+	
+	onchange="updateTextInput(this.value);"> 	<input type="text" id="textInput">
+	
 
 	<label for="readable-checkbox">Readable:
-		<input type="checkbox" id="readable-checkbox" name="readable-checkbox" checked>
-	</label>
+		<input type="checkbox" id="readable-checkbox" name="readable-checkbox" checked></label>
 
 	<label for="pronounceable-checkbox">Easy Pronounceable:
-		<input type="checkbox" id="pronounceable-checkbox" name="pronounceable-checkbox">
-	</label>
+		<input type="checkbox" id="pronounceable-checkbox" name="pronounceable-checkbox"></label>
 
-	<label for="uppercase-checkbox">Uppercase:
-		<input type="checkbox" id="uppercase-checkbox" name="uppercase-checkbox" checked>
-	</label>
+	<label for="symbol-checkbox">Uppercase:
+		<input type="checkbox" id="uppercase-checkbox" name="uppercase-checkbox" checked></label>
 
-	<label for="lowercase-checkbox">Lowercase:
-		<input type="checkbox" id="lowercase-checkbox" name="lowercase-checkbox" checked>
-	</label>
+	<label for="uppercase-checkbox">Lowercase:
+		<input type="checkbox" id="lowercase-checkbox" name="lowercase-checkbox" checked></label>
+	<label for="lowercase-checkbox">
 
-	<label for="number-checkbox">Numbers:
-		<input type="checkbox" id="number-checkbox" name="number-checkbox" checked>
-	</label>
 
-	<label for="symbol-checkbox">Symbols:
-		<input type="checkbox" id="symbol-checkbox" name="symbol-checkbox">
-	</label>
+		<label for="number-checkbox">Numbers:
+			<input type="checkbox" id="number-checkbox" name="number-checkbox" checked></label>
 
-	<br><br>
+		<label for="symbol-checkbox">Symbols:
+			<input type="checkbox" id="symbol-checkbox" name="symbol-checkbox"></label>
 
-	<label for="difficulty-checkbox">Difficulty:
-		<input type="checkbox" id="difficulty-checkbox" onclick="updateDifficultyCheckbox()"> 
-	</label>
+		<br><br>
 
-	<div id="difficulty-options" style="display:none;">
-		<label for="low-radio">Low
-			<input type="radio" id="low-radio" name="difficulty-radio" onclick="updateDifficulty('low')">
-		</label>
-		<label for="medium-radio">Medium
-			<input type="radio" id="medium-radio" name="difficulty-radio" onclick="updateDifficulty('medium')">
-		</label>
-		<label for="hard-radio">Hard
-			<input type="radio" id="hard-radio" name="difficulty-radio" onclick="updateDifficulty('hard')">
-		</label>
-	</div>
+		<button id="generate-button" onclick="generatePassword()">Generate Password</button>
 
-	<br><br>
+		<br><br>
+		<input type="text" id="password-output" readonly>
 
-	<button id="generate-button" onclick="generatePassword()">Generate Password</button>
+		<button onclick="copyPassword()">Copy</button>
 
-	<br><br>
-	<input type="text" id="password-output" readonly>
+		<script>
+			function generatePassword() {
+				var length = document.getElementById("length-slider").value;
+				
+				var isReadable = document.getElementById("readable-checkbox").checked;
+				var isPronounceable = document.getElementById("pronounceable-checkbox").checked;
+				var useUppercase = document.getElementById("uppercase-checkbox").checked;
+				var useLowercase = document.getElementById("lowercase-checkbox").checked;
+				var useNumbers = document.getElementById("number-checkbox").checked;
+				var useSymbols = document.getElementById("symbol-checkbox").checked;
 
-	<button onclick="copyPassword()">Copy</button>
+				var charset = "";
+				if (useUppercase) {
+					charset += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+				}
+				if (useLowercase) {
+					charset += "abcdefghijklmnopqrstuvwxyz";
+				}
+				if (useNumbers) {
+					charset += "0123456789";
+				}
+				if (useSymbols) {
+					charset += "!@#$%^&*()_+-=[]{};:,.<>?";
+				}
 
-	<script>
-		var difficulty = "low";
+				var password = "";
+				for (var i = 0; i < length; i++) {
+					password += charset.charAt(Math.floor(Math.random() * charset.length));
+				}
 
-		function updateDifficultyCheckbox() {
-			var difficultyCheckbox = document.getElementById("difficulty-checkbox");
-			var difficultyOptions = document.getElementById("difficulty-options");
-			var otherCheckboxes = document.querySelectorAll('[id^="readable-checkbox"], [id^="pronounceable-checkbox"], [id^="uppercase-checkbox"], [id^="lowercase-checkbox"], [id^="number-checkbox"], [id^="symbol-checkbox"]');
+				if (isReadable) {
+					password = makeReadable(password);
+				}
+				if (isPronounceable) {
+					password = makePronounceable(password);
+				}
 
-			if (difficultyCheckbox.checked) {
-				difficultyOptions.style.display = "block";
-				otherCheckboxes.forEach(function (checkbox) {
-					checkbox.style.display = "none";
-				});
-			} else {
-				difficultyOptions.style.display = "none";
-				otherCheckboxes.forEach(function (checkbox) {
-					checkbox.style.display = "block";
-				});
-			}
-		}
-
-		function updateDifficulty(diff) {
-			difficulty = diff;
-		}
-
-		function generatePassword() {
-			var length = document.getElementById("length-slider").value;
-
-			var isReadable = document.getElementById("readable-checkbox").checked;
-			var isPronounceable = document.getElementById("pronounceable-checkbox").checked;
-			var useUppercase = document.getElementById("uppercase-checkbox").checked;
-			var useLowercase = document.getElementById("lowercase-checkbox").checked;
-			var useNumbers = document.getElementById("number-checkbox").checked;
-			var useSymbols = document.getElementById("symbol-checkbox").checked;
-
-			var charset = "";
-			if (useUppercase) {
-				charset += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-			}
-			if (useLowercase) {
-				charset += "abcdefghijklmnopqrstuvwxyz";
-			}
-			if (useNumbers) {
-				charset += "0123456789";
-			}
-			if (useSymbols) {
-				charset += "!@#$%^&*()_+-=[]{};:,.<>?";
+				document.getElementById("password-output").value = password;
 			}
 
-			var password = "";
-			for (var i = 0; i < length; i++) {
-				password += charset.charAt(Math.floor(Math.random() * charset.length));
+
+			function makeReadable(password) {
+
+				return password;
 			}
 
-			if (isReadable) {
-				password = makeReadable(password);
-			}
-			if (isPronounceable) {
-				password = makePronounceable(password);
+			function makePronounceable(password) {
+
+				return password;
 			}
 
-			document.getElementById("password-output").value = password;
-		}
+			function copyPassword() {
+				var passwordOutput = document.getElementById("password-output");
+				passwordOutput.select
+				passwordOutput.select();
+				document.execCommand("copy");
+				alert("Password Copied");
+			}
+/*TEST AREA START*/
+			function updateTextInput(val) {
+          document.getElementById('textInput').value=val; 
+        }
+		/*TEST AREA END*/
 
-		function makeReadable(password) {
-			// Buraya readability ile ilgili dönüşümleri ekleyebilirsiniz.
-			return password;
-		}
 
-		function makePronounceable(password) {
-			// Buraya pronounceability ile ilgili dönüşümleri ekleyebilirsiniz.
-			return password;
-		}
-
-		function copyPassword() {
-			var passwordOutput = document.getElementById("password-output");
-			passwordOutput.select
-			passwordOutput.select();
-			document.execCommand("copy");
-			alert("Password Copied");
-		}
-
-		function updateTextInput(val) {
-			document.getElementById('textInput').value = val;
-		}
-	</script>
+		</script>
 </body>
 <footer>© 2023, omertuncwho</footer>
 
